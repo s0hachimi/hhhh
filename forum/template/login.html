@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <style>
+        body {
+            background-color: rgb(178, 178, 179);
+        }
+
+        .cont {
+            display: grid;
+            justify-content: center;
+            margin-top: 200px;
+            text-align: center;
+            border-style: solid;
+            border-radius: 15px;
+            font-size: large;
+        }
+
+        input {
+            margin: 5px;
+            font-size: large;
+        }
+
+        h1 {
+            color: blue;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/">
+        <h1>Forum</h1>
+    </a>
+
+    <form action="" method="post">
+        <div class="cont">
+            <h3>Log in</h3>
+            <input type="email" name="email" id="email" required placeholder="Email address or phone number"><br>
+            <input type="password" name="password" id="password" required placeholder="Password">
+            <br> <button type="submit">Log In</button>
+            <a href="#">
+                <p>Forgotten password?</p>
+            </a>
+        </div>
+    </form>
+
+</body>
+
+</html>
