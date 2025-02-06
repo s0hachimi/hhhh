@@ -29,28 +29,46 @@
             color: blue;
             text-align: center;
         }
+       
     </style>
 </head>
 
 <body>
 
-    <a href="/index.html">
+    <a href="/">
         <h1>Forum</h1>
     </a>
-    
-    <form action="" method="post">
+
+    <form action="/check" method="post">
         <div class="cont">
             <h3>Create a new account</h3>
+            <input type="text" name="username" id="username" required placeholder="username"><br>
             <input type="email" name="email" id="email" required placeholder="Email address or phone number"><br>
-            <input type="password" name="password" id="password" required placeholder="Password"> <br>
-            <input type="password" name="passA" id="passA" required placeholder="Password">
+            <input type="password" name="pass1" id="pass1" required placeholder="New Password"> <br>
+            <input type="password" name="pass2" id="pass2" required placeholder="Confim Password">
             <br>
-            <button type="submit">Sing Up</button>
-            <a href="/login.html">
+            <button class="btn" type="submit">Sing Up</button>
+            <a href="/login">
                 <p>Already have an account?</p>
             </a>
         </div>
     </form>
+
+    <script>
+
+        let btn = document.querySelector(".btn")
+        let pass1 = document.querySelector("#pass1")
+        let pass2 = document.querySelector("#pass2")
+
+
+        btn.addEventListener("click", (e) => {
+            if (pass1.value !== pass2.value) {
+                alert("Passwords do not match !")
+                e.preventDefault()
+            }
+        })
+    </script>
+
 </body>
 
 </html>

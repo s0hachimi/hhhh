@@ -5,18 +5,18 @@ import (
 	"net/http"
 )
 
-func CreateAccount(w http.ResponseWriter, r *http.Request) {
+func Singup(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "method not allowd", http.StatusMethodNotAllowed)
 		return
 	}
 
-	if r.URL.Path != "/CNA" {
+	if r.URL.Path != "/singup" {
 		http.Error(w, "page not found", 404)
 		return
 	}
 
-	tmp, err := template.ParseFiles("template/newAccount.html")
+	tmp, err := template.ParseFiles("template/signup.html")
 
 	if err != nil {
 		http.Error(w, "htppp", 500)
