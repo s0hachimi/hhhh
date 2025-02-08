@@ -19,6 +19,15 @@
             display: flex;
             justify-content: space-around;
         }
+
+        .container{
+           text-align: center;
+            padding: 10px 10px;
+        }
+
+        .div-title{
+            padding-bottom: 7px;
+        }
     </style>
 </head>
 
@@ -28,19 +37,33 @@
         <div class="bor">
             <h1 style="text-align: center;">forum</h1>
             <div class="links">
-                <a href="/login">Log in</a>
-                <a href="/singup">Create new account</a>
+                <a href="/login-page">Log in</a>
+                <a href="/singup-page">Create new account</a>
             </div>
         </div>
     </header>
 
     <section>
         <div class="container">
-
+            <h3>Create Post : </h3>
+            <div class="div-title">
+                <label for="title">Title</label>
+                <input type="text" id="title">
+            </div>
+            <div>
+                <label for="comment">Comment</label>
+                <textarea name="comment" id="comment"></textarea>
+            </div>
+            <button class="button-comment" type="button" style="margin-top: 7px;"> click </button>
         </div>
     </section>
 
+    <main>
 
+    </main>
+
+
+    <script src="/forum/scripts/main.js"></script>
 
 </body>
 

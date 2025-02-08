@@ -16,7 +16,7 @@ func InitHandlers(database *sql.DB) {
 }
 
 
-func Check(w http.ResponseWriter, r *http.Request) {
+func Singup(w http.ResponseWriter, r *http.Request) {
 	
 	username := r.FormValue("username")
 	email := r.FormValue("email")

@@ -7,13 +7,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Log(w http.ResponseWriter, r *http.Request) {
+func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "method not allowd", http.StatusMethodNotAllowed)
 		return
 	}
 
-	if r.URL.Path != "/log" {
+	if r.URL.Path != "/login" {
 		http.Error(w, "page not found", 404)
 		return
 	}

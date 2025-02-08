@@ -28,20 +28,17 @@ func init() {
 		log.Fatal("Error executing SQL statements:", err)
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	forum.InitHandlers(db)
 }
 
 func main() {
 	defer db.Close()
+
 	http.HandleFunc("/", forum.HomePage)
-	http.HandleFunc("/login", forum.LoginPage)
+	http.HandleFunc("/login-page", forum.LoginPage)
+	http.HandleFunc("/singup-page", forum.SingupPage)
 	http.HandleFunc("/singup", forum.Singup)
-	http.HandleFunc("/check", forum.Check)
-	http.HandleFunc("/log", forum.Log)
+	http.HandleFunc("/login", forum.Login)
 
 
 	fmt.Println("http://localhost:8080")
