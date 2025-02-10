@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	_ "github.com/mattn/go-sqlite3"
+	
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -35,5 +35,5 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.ServeFile(w, r, "template/index.html")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

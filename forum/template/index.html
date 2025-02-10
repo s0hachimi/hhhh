@@ -4,29 +4,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>forum</title>
+    <title>Forum</title>
     <style>
         body {
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
         }
 
-        .bor {
-            background-color: rgb(214, 214, 238);
+        header {
+            background-color: #3f51b5;
+            padding: 20px;
+            text-align: center;
+            color: white;
         }
 
         .links {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            padding: 10px 15px;
+            margin-left: 10px;
         }
 
-        .container{
-           text-align: center;
-            padding: 10px 10px;
+        .nav-links a{
+            margin-left: 10px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: 0.3s;
         }
 
-        .div-title{
-            padding-bottom: 7px;
+        .links a{
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .links a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            width: 50%;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .div-title,
+        .div-comment {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .topic-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .topic-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            background: #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .topic-options label:hover {
+            background-color: #d0d0d0;
+        }
+
+        button {
+            background-color: #3f51b5;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #303f9f;
+        }
+
+        .main-div {
+            width: 50%;
+            margin: auto;
+        }
+
+        .post {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post h4 {
+            margin: 0;
+            color: #3f51b5;
+        }
+
+        .post p {
+            color: #555;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -34,36 +145,68 @@
 <body>
 
     <header>
-        <div class="bor">
-            <h1 style="text-align: center;">forum</h1>
-            <div class="links">
-                <a href="/login-page">Log in</a>
-                <a href="/singup-page">Create new account</a>
+        <h1>Forum</h1>
+
+        <div class="links">
+            <a href="/login-page">Log in</a>
+            <div class="nav-links">
+                <a href="/home">
+                    <span>Home</span>
+                </a>
+                <a href="/filter?category=Music">
+                    <span>Music</span>
+                </a>
+                <a href="/filter?category=Sport">
+                    <span>Sport</span>
+                </a>
+                <a href="/filter?category=Gaming">
+                    <span>Gaming</span>
+                </a>
+                <a href="/filter?category=Health">
+                    <span>Health</span>
+                </a>
+                <a href="/filter?category=General">
+                    <span>General</span>
+                </a>
             </div>
+            <a href="/signup-page">Create new account</a>
         </div>
     </header>
 
     <section>
-        <div class="container">
-            <h3>Create Post : </h3>
-            <div class="div-title">
-                <label for="title">Title</label>
-                <input type="text" id="title">
+        <form action="/posts" method="get">
+            <div class="container">
+                <h3>Create Post</h3>
+                <div class="div-title">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" required>
+                </div>
+                <div class="div-comment">
+                    <label for="comment">Comment</label>
+                    <textarea name="comment" id="comment" rows="4" required></textarea>
+                </div>
+                <div class="topic-options">
+                    <label><input type="checkbox" id="music" name="topic" value="Music"> Music</label>
+                    <label><input type="checkbox" id="sport" name="topic" value="Sport"> Sport</label>
+                    <label><input type="checkbox" id="gaming" name="topic" value="Gaming"> Gaming</label>
+                    <label><input type="checkbox" id="health" name="topic" value="Health"> Health</label>
+                    <label><input type="checkbox" id="general" name="topic" value="General"> General</label>
+                </div>
+                <button type="submit">Post</button>
             </div>
-            <div>
-                <label for="comment">Comment</label>
-                <textarea name="comment" id="comment"></textarea>
-            </div>
-            <button class="button-comment" type="button" style="margin-top: 7px;"> click </button>
-        </div>
+        </form>
     </section>
 
-    <main>
+    <main class="main-div">
+        {{range .}}
+        <div class="post">
+            <h4>{{.Title}}</h4>
+            <p>{{.Comment}}</p>
 
+            <span>#{{.Topic}}</span>
+        </div>
+        {{end}}
     </main>
-
-
-    <script src="/forum/scripts/main.js"></script>
 
 </body>
 

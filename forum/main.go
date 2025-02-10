@@ -8,6 +8,8 @@ import (
 	"os"
 
 	forum "forum/func"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var db *sql.DB
@@ -39,7 +41,8 @@ func main() {
 	http.HandleFunc("/singup-page", forum.SingupPage)
 	http.HandleFunc("/singup", forum.Singup)
 	http.HandleFunc("/login", forum.Login)
-
+	http.HandleFunc("/posts", forum.Posts)
+	http.HandleFunc("/filter", forum.Filter)
 
 	fmt.Println("http://localhost:8080")
 
