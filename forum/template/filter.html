@@ -4,10 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>filter</title>
+    <link rel="stylesheet" href="/static/css/filter.css">
 </head>
 <body>
 
-    
-    
+    <header>
+        <h1>Forum</h1>
+
+        <div class="links">
+            <a href="/login-page">Log in</a>
+            <div class="nav-links">
+                <a href="/">
+                    <span>Home</span>
+                </a>
+                <a href="/filter?category=Music">
+                    <span>Music</span>
+                </a>
+                <a href="/filter?category=Sport">
+                    <span>Sport</span>
+                </a>
+                <a href="/filter?category=Gaming">
+                    <span>Gaming</span>
+                </a>
+                <a href="/filter?category=Health">
+                    <span>Health</span>
+                </a>
+                <a href="/filter?category=General">
+                    <span>General</span>
+                </a>
+                <a href="/likes">
+                    <span>Likes</span>
+                </a>
+            </div>
+            <a href="/singup-page">Create new account</a>
+        </div>
+    </header>
+
+
+
+
+    <div class="container">
+        {{range .}}
+        <div class="post">
+            <h4>{{.Title}}</h4>
+            <p>{{.Descriptions}}</p>
+            <span>{{.Topic}}</span>
+        </div>
+        {{end}}
+    </div>
 </body>
 </html>

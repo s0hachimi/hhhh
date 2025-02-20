@@ -23,7 +23,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT title, comment, topic FROM posts;")
+	rows, err := db.Query("SELECT title, descriptions, time, topic FROM posts ORDER BY time DESC;")
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "htppp", 500)
@@ -33,7 +33,8 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 
 	type Post struct {
 		Title   string
-		Comment string
+		Descriptions string
+		Time string
 		Topic   string
 	}
 
@@ -41,8 +42,8 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var newPost Post
-		var title, comment, topic string
-		er := rows.Scan(&title, &comment, &topic)
+		var title, descriptions,t, topic string
+		er := rows.Scan(&title, &descriptions,&t, &topic)
 
 		if er != nil {
 			http.Error(w, "htppp", 500)
@@ -50,10 +51,17 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		newPost.Title = title
-		newPost.Comment = comment
+		newPost.Descriptions = descriptions
+		newPost.Time = t
 		newPost.Topic = topic
 		arrPost = append(arrPost, newPost)
 
 	}
-	tmp.Execute(w, arrPost)
+	err = tmp.Execute(w, arrPost)
+
+    if err != nil {
+		fmt.Println(err)
+		http.Error(w, "htppp", 500)
+			return
+	}
 }

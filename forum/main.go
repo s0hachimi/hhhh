@@ -43,6 +43,10 @@ func main() {
 	http.HandleFunc("/login", forum.Login)
 	http.HandleFunc("/posts", forum.Posts)
 	http.HandleFunc("/filter", forum.Filter)
+	http.HandleFunc("/likes", forum.Likes)
+
+	http.HandleFunc("/static/", forum.StaticHandle)
+
 
 	fmt.Println("http://localhost:8080")
 

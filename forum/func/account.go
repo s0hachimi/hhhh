@@ -17,14 +17,12 @@ func SingupPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmp, err := template.ParseFiles("template/signup.html")
-
 	if err != nil {
 		http.Error(w, "htppp", 500)
 		return
 	}
 
 	tmp.Execute(w, nil)
-
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
@@ -39,13 +37,10 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmp, err := template.ParseFiles("template/login.html")
-
 	if err != nil {
 		http.Error(w, "htppp", 500)
 		return
 	}
 
 	tmp.Execute(w, nil)
-
 }
-

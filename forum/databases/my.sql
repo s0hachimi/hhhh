@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS users  (
 CREATE TABLE IF NOT EXISTS posts (
      id INTEGER PRIMARY KEY AUTOINCREMENT,
      title TEXT NOT NULL,
-     comment TEXT NOT NULL,
-     topic TEXT NOT NULL
+     descriptions TEXT NOT NULL,
+     time TEXT,
+     topic TEXT NOT NULL,
+     like INTEGER,
+     dislike INTEGER
 );

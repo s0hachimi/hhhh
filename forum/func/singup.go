@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -15,9 +14,7 @@ func InitHandlers(database *sql.DB) {
 	db = database
 }
 
-
 func Singup(w http.ResponseWriter, r *http.Request) {
-	
 	username := r.FormValue("username")
 	email := r.FormValue("email")
 	password := r.FormValue("pass2")
