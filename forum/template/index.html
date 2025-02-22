@@ -69,46 +69,27 @@
 
     <main class="main-div">
         {{range .}}
-        <div class="post">
+        <div class="post" data-post-id="{{.ID}}">
             <h4>{{.Title}}</h4>
             <p>{{.Descriptions}}</p>
             <p>{{.Time}}</p>
             <span>#{{.Topic}}</span>
             <div class="box">
-                <button class="like" type="submit">
+                <button class="like">
                     <i class="fa-solid fa-thumbs-up"></i>
-                    <span id="span-like">0</span>
+                    <span>{{.Likes}}</span>
                 </button>
-
-                <button class="dislike" type="submit">
+    
+                <button class="dislike">
                     <i class="fa-solid fa-thumbs-down"></i>
-                    <span id="span-dislike">0</span>
+                    <span>{{.Dislikes}}</span>
                 </button>
             </div>
         </div>
         {{end}}
     </main>
 
-    <script>
-
-        const like = document.querySelector(".like")
-        const dislike = document.querySelector(".dislike")
-
-        like.addEventListener("click", function() {
-            const span = document.getElementById("span-like")
-           let i = span.textContent
-
-           if (like.className === "like active") {
-            like.classList.remove("active")
-               span.textContent = Number(i) - 1
-           } else {
-                like.classList.add("active")
-               span.textContent = Number(i) + 1
-           }
-        })
-
-
-    </script>
+   <script src="/static/scripts/main.js"></script>
 
 
 </body>

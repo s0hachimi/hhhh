@@ -43,7 +43,7 @@ func main() {
 	http.HandleFunc("/login", forum.Login)
 	http.HandleFunc("/posts", forum.Posts)
 	http.HandleFunc("/filter", forum.Filter)
-	http.HandleFunc("/likes", forum.Likes)
+	http.HandleFunc("/like", forum.LikeHandler)
 
 	http.HandleFunc("/static/", forum.StaticHandle)
 

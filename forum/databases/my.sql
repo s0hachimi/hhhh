@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS posts (
      descriptions TEXT NOT NULL,
      time TEXT,
      topic TEXT NOT NULL,
-     like INTEGER,
-     dislike INTEGER
+     likes INTEGER DEFAULT 0,
+     dislikes INTEGER DEFAULT 0
 );

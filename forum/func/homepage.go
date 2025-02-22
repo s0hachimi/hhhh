@@ -23,7 +23,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT title, descriptions, time, topic FROM posts ORDER BY time DESC;")
+	rows, err := db.Query("SELECT id, title, descriptions, time, topic, likes, dislikes FROM posts ORDER BY time DESC;")
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "htppp", 500)
@@ -32,10 +32,13 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	type Post struct {
+		ID int
 		Title   string
 		Descriptions string
 		Time string
 		Topic   string
+		Likes int
+		Dislikes int
 	}
 
 	var arrPost []Post
@@ -43,17 +46,22 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var newPost Post
 		var title, descriptions,t, topic string
-		er := rows.Scan(&title, &descriptions,&t, &topic)
+		var id, like, dislike  int
+		er := rows.Scan(&id, &title, &descriptions, &t, &topic, &like, &dislike)
 
 		if er != nil {
-			http.Error(w, "htppp", 500)
+			fmt.Println(er)
+			http.Error(w, "database !", 500)
 			return
 		}
 
+		newPost.ID = id
 		newPost.Title = title
 		newPost.Descriptions = descriptions
 		newPost.Time = t
 		newPost.Topic = topic
+		newPost.Likes = like
+		newPost.Dislikes = dislike
 		arrPost = append(arrPost, newPost)
 
 	}
