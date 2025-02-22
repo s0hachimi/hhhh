@@ -41,6 +41,7 @@ func main() {
 	http.HandleFunc("/singup-page", forum.SingupPage)
 	http.HandleFunc("/singup", forum.Singup)
 	http.HandleFunc("/login", forum.Login)
+	http.HandleFunc("/logout", forum.Logout)
 	http.HandleFunc("/posts", forum.Posts)
 	http.HandleFunc("/filter", forum.Filter)
 	http.HandleFunc("/like", forum.LikeHandler)

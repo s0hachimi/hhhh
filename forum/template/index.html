@@ -15,7 +15,14 @@
         <h1>Forum</h1>
 
         <div class="links">
+            {{range .}}
+            {{if .IsLoggedIn}}
+            <span>Welcome, {{.Username}}</span>
+            <a href="/logout">Logout</a>
+            {{else}}
             <a href="/login-page">Log in</a>
+            {{end}}
+            {{end}}
             <div class="nav-links">
                 <a href="/">
                     <span>Home</span>
@@ -39,7 +46,6 @@
                     <span>Likes</span>
                 </a>
             </div>
-            <a href="/singup-page">Create new account</a>
         </div>
     </header>
 
@@ -79,7 +85,7 @@
                     <i class="fa-solid fa-thumbs-up"></i>
                     <span>{{.Likes}}</span>
                 </button>
-    
+
                 <button class="dislike">
                     <i class="fa-solid fa-thumbs-down"></i>
                     <span>{{.Dislikes}}</span>
@@ -89,7 +95,7 @@
         {{end}}
     </main>
 
-   <script src="/static/scripts/main.js"></script>
+    <script src="/static/scripts/main.js"></script>
 
 
 </body>

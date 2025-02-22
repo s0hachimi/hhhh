@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS users  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
     email TEXT UNIQUE,
-    password TEXT
+    password TEXT,
+    session_token TEXT
 );
 
 -- Create Posts table

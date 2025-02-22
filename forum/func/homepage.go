@@ -39,7 +39,11 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		Topic   string
 		Likes int
 		Dislikes int
+		IsLoggedIn bool
+		Username string
 	}
+
+	
 
 	var arrPost []Post
 
@@ -62,9 +66,15 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		newPost.Topic = topic
 		newPost.Likes = like
 		newPost.Dislikes = dislike
+		
+		is, username := IsLoggedIn(r)
+		newPost.Username = username
+		newPost.IsLoggedIn = is
+
 		arrPost = append(arrPost, newPost)
 
 	}
+
 	err = tmp.Execute(w, arrPost)
 
     if err != nil {
