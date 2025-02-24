@@ -31,26 +31,28 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	type Post struct {
-		ID int
-		Title   string
-		Descriptions string
-		Time string
-		Topic   string
-		Likes int
-		Dislikes int
+	type users struct {
 		IsLoggedIn bool
-		Username string
+		Username   string
 	}
 
-	
+	type Post struct {
+		ID           int
+		Title        string
+		Descriptions string
+		Time         string
+		Topic        string
+		Likes        int
+		Dislikes     int
+		User         users
+	}
 
 	var arrPost []Post
 
 	for rows.Next() {
 		var newPost Post
-		var title, descriptions,t, topic string
-		var id, like, dislike  int
+		var title, descriptions, t, topic string
+		var id, like, dislike int
 		er := rows.Scan(&id, &title, &descriptions, &t, &topic, &like, &dislike)
 
 		if er != nil {
@@ -66,20 +68,19 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		newPost.Topic = topic
 		newPost.Likes = like
 		newPost.Dislikes = dislike
-		
+
 		is, username := IsLoggedIn(r)
-		newPost.Username = username
-		newPost.IsLoggedIn = is
+		newPost.User.Username = username
+		newPost.User.IsLoggedIn = is
 
 		arrPost = append(arrPost, newPost)
 
 	}
 
 	err = tmp.Execute(w, arrPost)
-
-    if err != nil {
+	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "htppp", 500)
-			return
+		return
 	}
 }

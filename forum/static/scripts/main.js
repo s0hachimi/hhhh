@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+
     document.querySelectorAll(".post").forEach(post => {
         let likeBtn = post.querySelector(".like")
         let dislikeBtn = post.querySelector(".dislike")
@@ -67,3 +69,12 @@ function updateLikes(postId, action, change) {
     // })
     // .catch(error => console.error(error))
 }
+
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+  }
+  
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+  }

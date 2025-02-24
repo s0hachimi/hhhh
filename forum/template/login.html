@@ -6,29 +6,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in</title>
     <style>
+        /* Body Styling */
         body {
-            background-color: rgb(178, 178, 179);
+            background-color: #f2f2f2;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            text-align: center;
         }
 
+        /* Container Styling */
         .cont {
             display: grid;
             justify-content: center;
-            margin-top: 200px;
+            align-items: center;
+            margin-left: 45%;
+            margin-top: 7%;
+            padding: 20px;
+            width: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        /* Header Styling */
+        h1 {
+            color: #007bff;
             text-align: center;
-            border-style: solid;
-            border-radius: 15px;
-            font-size: large;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            width: 100%;
+        }
+
+        h3 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
 
         input {
-            margin: 5px;
-            font-size: large;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            transition: border 0.3s ease;
         }
 
-        h1 {
-            color: blue;
-            text-align: center;
+        input:focus {
+            border-color: #007bff;
+            outline: none;
         }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 
@@ -42,8 +105,9 @@
             <h3>Log in</h3>
             <input type="text" name="username" id="username" required placeholder="Username"><br>
             <input type="password" name="password" id="password" required placeholder="Password">
-            <br> <button type="submit">Log In</button>
-           
+            <br>
+            <button type="submit">Log In</button>
+            <a href="/singup-page">Don't have an account? Sign up here</a>
         </div>
     </form>
 

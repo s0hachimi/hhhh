@@ -13,6 +13,12 @@ type LikeRequest struct {
 }
 
 func LikeHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := r.Cookie("session_token")
+	if err != nil {
+		http.Redirect(w, r, "/login-page", http.StatusSeeOther)
+		return
+	}
+
 	if r.Method != "POST" {
 		http.Error(w, "method not allowd", http.StatusMethodNotAllowed)
 		return
@@ -20,7 +26,7 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 
 	var req LikeRequest
 
-	err := json.NewDecoder(r.Body).Decode(&req)
+	err = json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, "bad request !", http.StatusBadRequest)
 		return
@@ -55,7 +61,7 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// // fmt.Println("3")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{"count": count , "column": column})
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader(http.StatusOK)
+	// json.NewEncoder(w).Encode(map[string]interface{}{"count": count, "column": column})
 }

@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>filter</title>
-    <link rel="stylesheet" href="/static/css/filter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Forum</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
+
 <body>
 
     <header>
-        <h1>Forum</h1>
+      
 
-        <div class="links">
-            <a href="/login-page">Log in</a>
-            <div class="nav-links">
+        <div id="mySidenav" class="sidenav">
+            
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                 <a href="/">
                     <span>Home</span>
                 </a>
@@ -35,22 +39,78 @@
                 <a href="/likes">
                     <span>Likes</span>
                 </a>
-            </div>
-            <a href="/singup-page">Create new account</a>
+            
         </div>
+        <span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+
+        <h1>Forum</h1>
+
+        <div class="links">
+            {{range .}}
+            {{if eq .ID 1}}
+            {{if .User.IsLoggedIn}}
+            <span>Welcome, {{.User.Username}}</span>
+            <a href="/logout">Logout</a>
+            {{else}}
+            <a href="/login-page">Log in</a>
+            {{end}}
+            {{end}}
+            {{end}}
+        </div>
+
+
     </header>
 
+    <section>
+        <form action="/posts" method="get">
+            <div class="container">
+                <h3>Create Post</h3>
+                <div class="div-title">
+                    <label for="title">Title :</label>
+                    <input type="text" name="title" id="title" required>
+                </div>
+                <div class="div-description">
+                    <label for="description">description :</label>
+                    <textarea name="description" id="description" rows="4" required></textarea>
+                </div>
+                <div class="topic-options">
+                    <label><input type="checkbox" id="music" name="topic" value="Music"> Music</label>
+                    <label><input type="checkbox" id="sport" name="topic" value="Sport"> Sport</label>
+                    <label><input type="checkbox" id="gaming" name="topic" value="Gaming"> Gaming</label>
+                    <label><input type="checkbox" id="health" name="topic" value="Health"> Health</label>
+                    <label><input type="checkbox" id="general" name="topic" value="General"> General</label>
+                </div>
+                <button type="submit">Post</button>
+            </div>
+        </form>
+    </section>
 
-
-
-    <div class="container">
+    <main class="main-div">
         {{range .}}
-        <div class="post">
+        <div class="post" data-post-id="{{.ID}}">
             <h4>{{.Title}}</h4>
             <p>{{.Descriptions}}</p>
-            <span>{{.Topic}}</span>
+            <p>{{.Time}}</p>
+            <span>#{{.Topic}}</span>
+            <div class="box">
+                <button class="like">
+                    <i class="fa-solid fa-thumbs-up"></i>
+                    <span>{{.Likes}}</span>
+                </button>
+
+                <button class="dislike">
+                    <i class="fa-solid fa-thumbs-down"></i>
+                    <span>{{.Dislikes}}</span>
+                </button>
+            </div>
         </div>
         {{end}}
-    </div>
+    </main>
+
+    <script src="/static/scripts/main.js"></script>
+
+
 </body>
+
+
 </html>

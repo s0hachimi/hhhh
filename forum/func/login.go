@@ -41,7 +41,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessionToken := uuid.New().String()
-	expiration := time.Now().Add(24 * time.Hour)
+	expiration := time.Now().Add(1 * time.Hour)
+	// fmt.Println(expiration)
 
 	_, err = db.Exec("UPDATE users SET session_token = ? WHERE id = ?", sessionToken, userID)
 	if err != nil {
@@ -61,9 +62,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-
 func IsLoggedIn(r *http.Request) (bool, string) {
-	
 	cookie, err := r.Cookie("session_token")
 	if err != nil {
 		return false, ""
@@ -77,4 +76,3 @@ func IsLoggedIn(r *http.Request) (bool, string) {
 
 	return true, userName
 }
-

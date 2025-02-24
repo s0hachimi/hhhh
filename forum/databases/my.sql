@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS posts (
      title TEXT NOT NULL,
      descriptions TEXT NOT NULL,
      time TEXT,
-     topic TEXT NOT NULL,
-     likes INTEGER DEFAULT 0,
-     dislikes INTEGER DEFAULT 0
+    topic TEXT NOT NULL,
+    likes INTEGER DEFAULT 0,
+    dislikes INTEGER DEFAULT 0,
+    user_id INTEGER,
+     FOREIGN KEY (user_id) REFERENCES users(id)
+
 );
