@@ -36,13 +36,14 @@
                     <span>General</span>
                 </a>
                 <a href="/likes">
-                    <span>Likes</span>
+                    <span>My Likes</span>
                 </a>
             
         </div>
         <span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776; open</span>
 
         <h1>Forum</h1>
+
         <div class="links">
             {{range $index, $e := .}}
                 {{if eq $index 0}} 
@@ -60,33 +61,13 @@
 
     </header>
 
-    <section>
-        <form action="/posts" method="get">
-            <div class="container">
-                <h3>Create Post</h3>
-                <div class="div-title">
-                    <label for="title">Title :</label>
-                    <input type="text" name="title" id="title" required>
-                </div>
-                <div class="div-description">
-                    <label for="description">description :</label>
-                    <textarea name="description" id="description" rows="4" required></textarea>
-                </div>
-                <div class="topic-options">
-                    <label><input type="checkbox" id="music" name="topic" value="Music"> Music</label>
-                    <label><input type="checkbox" id="sport" name="topic" value="Sport"> Sport</label>
-                    <label><input type="checkbox" id="gaming" name="topic" value="Gaming"> Gaming</label>
-                    <label><input type="checkbox" id="health" name="topic" value="Health"> Health</label>
-                    <label><input type="checkbox" id="general" name="topic" value="General"> General</label>
-                </div>
-                <button type="submit">Post</button>
-            </div>
-        </form>
-    </section>
+    <a href="/create-Post">Create New Post</a>
 
     <main class="main-div">
         {{range .}}
+        {{if ne .ID 0}}
         <div class="post" data-post-id="{{.ID}}">
+            <p>by : <h2>{{.Username}}</h2></p>
             <h4>{{.Title}}</h4>
             <p>{{.Descriptions}}</p>
             <p>{{.Time}}</p>
@@ -103,6 +84,7 @@
                 </button>
             </div>
         </div>
+        {{end}}
         {{end}}
     </main>
 

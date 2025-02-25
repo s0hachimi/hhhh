@@ -5,6 +5,10 @@ body {
     background-color: #f4f4f9;
 }
 
+/* section{
+    display: none;
+} */
+
 header {
     display: flex;
     justify-content: space-between;

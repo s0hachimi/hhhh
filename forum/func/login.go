@@ -64,9 +64,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 func IsLoggedIn(r *http.Request) (bool, string) {
 	cookie, err := r.Cookie("session_token")
-	if err != nil {
+	if err != nil || cookie.Value == "" {
 		return false, ""
 	}
+
+	// fmt.Println(cookie)
 
 	var userName string
 	err = db.QueryRow("SELECT username FROM users WHERE session_token = ?", cookie.Value).Scan(&userName)

@@ -17,13 +17,8 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmp, err := template.ParseFiles("template/index.html")
-	if err != nil {
-		http.Error(w, "htppp", 500)
-		return
-	}
 
-	rows, err := db.Query("SELECT id, title, descriptions, time, topic, likes, dislikes FROM posts ORDER BY time DESC;")
+	rows, err := db.Query("SELECT id, username, title, descriptions, time, topic, likes, dislikes FROM posts ORDER BY time DESC;")
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "htppp", 500)
@@ -38,6 +33,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 
 	type Post struct {
 		ID           int
+		Username     string
 		Title        string
 		Descriptions string
 		Time         string
@@ -48,12 +44,18 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var arrPost []Post
+	var newPost Post
+
+	is, username := IsLoggedIn(r)
+	newPost.User.Username = username
+	newPost.User.IsLoggedIn = is
+
+	arrPost = append(arrPost, newPost)
 
 	for rows.Next() {
-		var newPost Post
-		var title, descriptions, t, topic string
+		var username, title, descriptions, t, topic string
 		var id, like, dislike int
-		er := rows.Scan(&id, &title, &descriptions, &t, &topic, &like, &dislike)
+		er := rows.Scan(&id, &username, &title, &descriptions, &t, &topic, &like, &dislike)
 
 		if er != nil {
 			fmt.Println(er)
@@ -62,6 +64,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		newPost.ID = id
+		newPost.Username = username
 		newPost.Title = title
 		newPost.Descriptions = descriptions
 		newPost.Time = t
@@ -69,12 +72,15 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		newPost.Likes = like
 		newPost.Dislikes = dislike
 
-		is, username := IsLoggedIn(r)
-		newPost.User.Username = username
-		newPost.User.IsLoggedIn = is
-
 		arrPost = append(arrPost, newPost)
+		newPost = Post{}
+	}
 
+
+	tmp, err := template.ParseFiles("template/index.html")
+	if err != nil {
+		http.Error(w, "htppp", 500)
+		return
 	}
 
 	err = tmp.Execute(w, arrPost)

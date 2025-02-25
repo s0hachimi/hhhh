@@ -1,18 +1,18 @@
 package forum
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"time"
 )
 
 func Posts(w http.ResponseWriter, r *http.Request) {
-	_, err := r.Cookie("session_token")
-	if err != nil {
+	cookie, err := r.Cookie("session_token")
+	if err != nil || cookie.Value == "" {
 		http.Redirect(w, r, "/login-page", http.StatusSeeOther)
 		return
 	}
-	
 
 	title := r.FormValue("title")
 	description := r.FormValue("description")
@@ -26,7 +26,13 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 		topic += v + ","
 	}
 
-	_, err = db.Exec("INSERT INTO posts (title, descriptions, time, topic) VALUES (?, ?, ?, ?);", title, description, t, topic)
+	var userName string
+	err = db.QueryRow("SELECT username FROM users WHERE session_token = ?", cookie.Value).Scan(&userName)
+	if err == sql.ErrNoRows || err != nil {
+		return 
+	}
+
+	_, err = db.Exec("INSERT INTO posts (username, title, descriptions, time, topic) VALUES (?, ?, ?, ?, ?);", userName, title, description, t, topic)
 	if err != nil {
 		fmt.Println(err)
 		http.ServeFile(w, r, "template/emailCheck.html")

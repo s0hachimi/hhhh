@@ -45,7 +45,7 @@ func main() {
 	http.HandleFunc("/posts", forum.Posts)
 	http.HandleFunc("/filter", forum.Filter)
 	http.HandleFunc("/like", forum.LikeHandler)
-
+	http.HandleFunc("/create-Post", forum.CreatePost)
 	http.HandleFunc("/static/", forum.StaticHandle)
 
 
