@@ -25,10 +25,12 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	for _, v := range s {
 		topic += v + ","
 	}
+	fmt.Println(cookie.Value)
 
 	var userName string
 	err = db.QueryRow("SELECT username FROM users WHERE session_token = ?", cookie.Value).Scan(&userName)
 	if err == sql.ErrNoRows || err != nil {
+		fmt.Println(err)
 		return 
 	}
 

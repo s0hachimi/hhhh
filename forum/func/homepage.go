@@ -6,6 +6,23 @@ import (
 	"net/http"
 )
 
+type users struct {
+	IsLoggedIn bool
+	Username   string
+}
+
+type Post struct {
+	ID           int
+	Username     string
+	Title        string
+	Descriptions string
+	Time         string
+	Topic        string
+	Likes        int
+	Dislikes     int
+	User         users
+}
+
 func HomePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "method not allowd", http.StatusMethodNotAllowed)
@@ -26,22 +43,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	type users struct {
-		IsLoggedIn bool
-		Username   string
-	}
-
-	type Post struct {
-		ID           int
-		Username     string
-		Title        string
-		Descriptions string
-		Time         string
-		Topic        string
-		Likes        int
-		Dislikes     int
-		User         users
-	}
+	
 
 	var arrPost []Post
 	var newPost Post

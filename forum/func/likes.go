@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -19,7 +20,7 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed !", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	cookie, err := r.Cookie("session_token")
 	if err != nil || cookie.Value == "" {
 		sendJSONResponse(w, http.StatusUnauthorized, map[string]interface{}{
@@ -27,7 +28,7 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Bad Request !", http.StatusBadRequest)
@@ -39,7 +40,6 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request !", http.StatusBadRequest)
 		return
 	}
-
 
 	var column string
 	switch req.Action {
@@ -59,18 +59,17 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var count int
-	// err = db.QueryRow("SELECT "+column+" FROM posts WHERE id = ?", req.PostID).Scan(&count)
-	// if err != nil {
-	// 	http.Error(w, "Internal Server Error !!!", http.StatusInternalServerError)
-	// 	return
-	// }
+	err = LikedPost(cookie.Value, req.PostID, req.Action)
+	if err != nil {
+		fmt.Println("err", err)
+		http.Error(w, "Internal Server Error !!", http.StatusInternalServerError)
+		return
+	}
 
 	sendJSONResponse(w, http.StatusOK, map[string]interface{}{
 		"success": true,
-		// "count":   count,
 	})
-	
+
 }
 
 func sendJSONResponse(w http.ResponseWriter, statusCode int, response map[string]interface{}) {
@@ -78,3 +77,60 @@ func sendJSONResponse(w http.ResponseWriter, statusCode int, response map[string
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(response)
 }
+
+func LikedPost(cookieValue string, postID int, likeType string) error {
+	var userID int
+	err := db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookieValue).Scan(&userID)
+	if err != nil {
+		fmt.Println("Error fetching user ID:", err)
+		return err
+	}
+
+	// تحويل نوع الإعجاب إلى 1 أو -1
+	var n int
+	if likeType == "like" {
+		n = 1
+	} else {
+		n = -1
+	}
+
+	_, err = db.Exec(`
+        INSERT INTO post_likes (user_id, post_id, like_type) 
+        VALUES (?, ?, ?) 
+        ON CONFLICT(user_id, post_id) 
+        DO UPDATE SET like_type = excluded.like_type;
+    `, userID, postID, n)
+
+	if err != nil {
+		fmt.Println("Error inserting/updating post like:", err)
+		return err
+	}
+
+	return nil
+}
+
+func GetUserReaction(r *http.Request, postID int) int {
+	cookie, err := r.Cookie("session_token")
+	if err != nil || cookie.Value == "" {
+		return 0 // لم يسجل الدخول
+	}
+
+	var userID int
+	err = db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookie.Value).Scan(&userID)
+	if err == sql.ErrNoRows || err != nil {
+		return 0
+	}
+
+	// التحقق مما إذا كان المستخدم قد أعجب أو لم يعجب
+	var likeType int
+	err = db.QueryRow("SELECT like_type FROM post_likes WHERE user_id = ? AND post_id = ?", userID, postID).Scan(&likeType)
+	if err == sql.ErrNoRows {
+		return 0 // لم يسجل إعجاب أو عدم إعجاب
+	}
+	if err != nil {
+		return 0
+	}
+
+	return likeType // 1 للإعجاب، -1 لعدم الإعجاب
+}
+
