@@ -59,13 +59,15 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = LikedPost(cookie.Value, req.PostID, req.Action)
-	if err != nil {
-		fmt.Println("err", err)
-		http.Error(w, "Internal Server Error !!", http.StatusInternalServerError)
-		return
+	if req.Change != -1 {
+		err = LikedPost(cookie.Value, req.PostID, req.Action)
+		if err != nil {
+			fmt.Println("err", err)
+			http.Error(w, "Internal Server Error !!", http.StatusInternalServerError)
+			return
+		}
 	}
-
+	
 	sendJSONResponse(w, http.StatusOK, map[string]interface{}{
 		"success": true,
 	})
@@ -86,13 +88,14 @@ func LikedPost(cookieValue string, postID int, likeType string) error {
 		return err
 	}
 
-	// تحويل نوع الإعجاب إلى 1 أو -1
 	var n int
 	if likeType == "like" {
 		n = 1
 	} else {
 		n = -1
 	}
+
+	fmt.Println(n, likeType)
 
 	_, err = db.Exec(`
         INSERT INTO post_likes (user_id, post_id, like_type) 
@@ -112,7 +115,7 @@ func LikedPost(cookieValue string, postID int, likeType string) error {
 func GetUserReaction(r *http.Request, postID int) int {
 	cookie, err := r.Cookie("session_token")
 	if err != nil || cookie.Value == "" {
-		return 0 // لم يسجل الدخول
+		return 0 
 	}
 
 	var userID int
@@ -121,16 +124,16 @@ func GetUserReaction(r *http.Request, postID int) int {
 		return 0
 	}
 
-	// التحقق مما إذا كان المستخدم قد أعجب أو لم يعجب
+	
 	var likeType int
 	err = db.QueryRow("SELECT like_type FROM post_likes WHERE user_id = ? AND post_id = ?", userID, postID).Scan(&likeType)
 	if err == sql.ErrNoRows {
-		return 0 // لم يسجل إعجاب أو عدم إعجاب
+		return 0 
 	}
 	if err != nil {
 		return 0
 	}
 
-	return likeType // 1 للإعجاب، -1 لعدم الإعجاب
+	return likeType
 }
 

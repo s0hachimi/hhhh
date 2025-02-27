@@ -11,6 +11,11 @@ type users struct {
 	Username   string
 }
 
+type reaction struct {
+	Like    bool
+	Dislike bool
+}
+
 type Post struct {
 	ID           int
 	Username     string
@@ -21,6 +26,7 @@ type Post struct {
 	Likes        int
 	Dislikes     int
 	User         users
+	Reaction     reaction
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +40,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	rows, err := db.Query("SELECT id, username, title, descriptions, time, topic, likes, dislikes FROM posts ORDER BY time DESC;")
 	if err != nil {
 		fmt.Println(err)
@@ -42,8 +47,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer rows.Close()
-
-	
 
 	var arrPost []Post
 	var newPost Post
@@ -65,6 +68,17 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		R := GetUserReaction(r, id)
+
+		if R == 1 {
+			newPost.Reaction.Like = true
+		} else if R == -1 {
+			newPost.Reaction.Dislike = true
+		} else {
+			newPost.Reaction.Like = false
+			newPost.Reaction.Dislike = false
+		}
+
 		newPost.ID = id
 		newPost.Username = username
 		newPost.Title = title
@@ -77,7 +91,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		arrPost = append(arrPost, newPost)
 		newPost = Post{}
 	}
-
 
 	tmp, err := template.ParseFiles("template/index.html")
 	if err != nil {

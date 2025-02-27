@@ -7,38 +7,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <title>Forum</title>
     <link rel="stylesheet" href="/static/css/style.css">
+
 </head>
 
 <body>
 
     <header>
-      
+
 
         <div id="mySidenav" class="sidenav">
-            
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="/">
-                    <span>Home</span>
-                </a>
-                <a href="/filter?category=Music">
-                    <span>Music</span>
-                </a>
-                <a href="/filter?category=Sport">
-                    <span>Sport</span>
-                </a>
-                <a href="/filter?category=Gaming">
-                    <span>Gaming</span>
-                </a>
-                <a href="/filter?category=Health">
-                    <span>Health</span>
-                </a>
-                <a href="/filter?category=General">
-                    <span>General</span>
-                </a>
-                <a href="/liked-posts">
-                    <span>My Likes</span>
-                </a>
-            
+
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="/">
+                <span>Home</span>
+            </a>
+            <a href="/filter?category=Music">
+                <span>Music</span>
+            </a>
+            <a href="/filter?category=Sport">
+                <span>Sport</span>
+            </a>
+            <a href="/filter?category=Gaming">
+                <span>Gaming</span>
+            </a>
+            <a href="/filter?category=Health">
+                <span>Health</span>
+            </a>
+            <a href="/filter?category=General">
+                <span>General</span>
+            </a>
+            <a href="/liked-posts">
+                <span>My Likes</span>
+            </a>
+
         </div>
         <span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776; open</span>
 
@@ -46,14 +47,14 @@
 
         <div class="links">
             {{range $index, $e := .}}
-                {{if eq $index 0}} 
-                    {{if $e.User.IsLoggedIn}} 
-                        <span>Welcome, {{$e.User.Username}}</span>
-                        <a href="/logout">Logout</a>
-                    {{else}}
-                        <a href="/login-page">Log in</a>
-                    {{end}}
-                {{end}}
+            {{if eq $index 0}}
+            {{if $e.User.IsLoggedIn}}
+            <span>Welcome, {{$e.User.Username}}</span>
+            <a href="/logout">Logout</a>
+            {{else}}
+            <a href="/login-page">Log in</a>
+            {{end}}
+            {{end}}
             {{end}}
         </div>
 
@@ -67,21 +68,32 @@
         {{range .}}
         {{if ne .ID 0}}
         <div class="post" data-post-id="{{.ID}}">
-            <p>by : <h2>{{.Username}}</h2></p>
+            <p>by :
+            <h2>{{.Username}}</h2>
+            </p>
             <h4>{{.Title}}</h4>
             <p>{{.Descriptions}}</p>
             <p>{{.Time}}</p>
             <span>#{{.Topic}}</span>
-            <div class="box">
-                <button class="like">
-                    <i class="fa-solid fa-thumbs-up"></i>
-                    <span>{{.Likes}}</span>
-                </button>
+            <div class="reactions">
+                <div class="box">
+                    <button class="like {{if .Reaction.Like}} active {{end}}">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        <span>{{.Likes}}</span>
+                    </button>
 
-                <button class="dislike">
-                    <i class="fa-solid fa-thumbs-down"></i>
-                    <span>{{.Dislikes}}</span>
-                </button>
+                    <button class="dislike {{if .Reaction.Dislike}} active {{end}}">
+                        <i class="fa-solid fa-thumbs-down"></i>
+                        <span>{{.Dislikes}}</span>
+                    </button>
+                </div>
+                <div class="comment">
+                    <button onclick="showComment()"> <i class="fa-solid fa-comment"></i> </button>
+                </div>
+            </div>
+            <div class="comment-text" id="comment-text">
+                <input type="text" placeholder="comment">
+                <button type="submit"> Comment </button>
             </div>
         </div>
         {{end}}
@@ -89,6 +101,18 @@
     </main>
 
     <script src="/static/scripts/main.js"></script>
+    <script>
+        let n = 0
+        function showComment() {
+            if (n === 0) {
+                document.getElementById("comment-text").style.display = "flex"
+                n = 1
+            } else {
+                document.getElementById("comment-text").style.display = "none"
+                n = 0
+            }
+        }
+    </script>
 
 
 </body>

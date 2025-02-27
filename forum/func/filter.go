@@ -21,36 +21,46 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 	category := r.FormValue("category")
 
 
-	rows, err := db.Query("SELECT id, title, descriptions, time, topic, likes, dislikes FROM posts WHERE topic LIKE ?", "%"+category+"%")
+	rows, err := db.Query("SELECT id, username, title, descriptions, time, topic, likes, dislikes FROM posts WHERE topic LIKE ?", "%"+category+"%")
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "h", 500)
 		return
 	}
 	defer rows.Close()
-	type Filter struct {
-		ID int
-		Title   string
-		Descriptions string
-		Time string
-		Topic   string
-		Likes int
-		Dislikes int
-		IsLoggedIn bool
-		Username string
-	}
-	var arrFilter []Filter
+	
+	var arrFilter []Post
+	var newFilter Post
+
+	is, username := IsLoggedIn(r)
+	newFilter.User.Username = username
+	newFilter.User.IsLoggedIn = is
+
+	arrFilter = append(arrFilter, newFilter)
+
 	for rows.Next() {
-		var newFilter Filter
-		var title, descriptions, t, topic string
-		var id, like, dislike  int
-		er := rows.Scan(&id, &title, &descriptions, &t, &topic, &like, &dislike)
+		var username, title, descriptions, t, topic string
+		var id, like, dislike int
+		er := rows.Scan(&id, &username, &title, &descriptions, &t, &topic, &like, &dislike)
 
 		if er != nil {
 			http.Error(w, "htp", 500)
 			return
 		}
+
+		R := GetUserReaction(r, id)
+
+		if R == 1 {
+			newFilter.Reaction.Like = true
+		} else if R == -1 {
+			newFilter.Reaction.Dislike = true
+		} else {
+			newFilter.Reaction.Like = false
+			newFilter.Reaction.Dislike = false
+		}
+
 		newFilter.ID = id
+		newFilter.Username = username
 		newFilter.Title = title
 		newFilter.Descriptions = descriptions
 		newFilter.Time = t
@@ -58,11 +68,8 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		newFilter.Likes = like
 		newFilter.Dislikes = dislike
 
-		is, username := IsLoggedIn(r)
-		newFilter.Username = username
-		newFilter.IsLoggedIn = is
-
 		arrFilter = append(arrFilter, newFilter)
+		newFilter = Post{}
 	}
 	tmp, err:= template.ParseFiles("template/filter.html")
 	if err != nil {

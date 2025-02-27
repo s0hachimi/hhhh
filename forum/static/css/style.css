@@ -157,6 +157,29 @@ button:hover {
     margin-top: 10px;
 }
 
+.reactions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment button {
+    margin-top: 25px;
+    font-size: large;
+}
+.comment-text {
+    display: none;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.comment-text button {
+    font-size: small;
+    padding: 0 2px  ;
+}
+.comment-text input{
+   width: 80%;
+   margin: 10px 10px;
+}
 
 /* side bar  */
 

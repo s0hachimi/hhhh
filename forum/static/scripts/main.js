@@ -91,3 +91,8 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
+
+
+function showComment() {
+    document.getElementById("comment-text").style.display = "flex"
+}

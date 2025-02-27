@@ -16,7 +16,7 @@ func LikedPostsHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(cookie.Value)
 
-	posts, err := GetLikedPosts(cookie.Value)
+	posts, err := GetLikedPosts(cookie.Value, r)
 	if err != nil {
 		http.Error(w, "Error fetching liked posts", http.StatusInternalServerError)
 		return
@@ -27,7 +27,7 @@ func LikedPostsHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, posts)
 }
 
-func GetLikedPosts(cookieValue string) ([]Post, error) {
+func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 	var userID int
 
 	err := db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookieValue).Scan(&userID)
@@ -57,6 +57,22 @@ func GetLikedPosts(cookieValue string) ([]Post, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		is, username := IsLoggedIn(r)
+		p.User.Username = username
+		p.User.IsLoggedIn = is
+
+		R := GetUserReaction(r, p.ID)
+
+		if R == 1 {
+			p.Reaction.Like = true
+		} else if R == -1 {
+			p.Reaction.Dislike = true
+		} else {
+			p.Reaction.Like = false
+			p.Reaction.Dislike = false
+		}
+
 		posts = append(posts, p)
 	}
 
