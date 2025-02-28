@@ -29,6 +29,14 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ex := CheckCookie(cookie.Value)
+	if !ex {
+		sendJSONResponse(w, http.StatusUnauthorized, map[string]interface{}{
+			"success": false,
+		})
+		return
+	}
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Bad Request !", http.StatusBadRequest)
@@ -72,6 +80,17 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		"success": true,
 	})
 
+}
+
+func CheckCookie(cookieValue string) bool {
+	var userID int
+	err := db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookieValue).Scan(&userID)
+	if err != nil {
+		fmt.Println("Error fetching user ID:", err)
+		
+		return false
+	}
+	return true
 }
 
 func sendJSONResponse(w http.ResponseWriter, statusCode int, response map[string]interface{}) {

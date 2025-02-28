@@ -9,7 +9,8 @@ import (
 
 func Posts(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session_token")
-	if err != nil || cookie.Value == "" {
+	ex := CheckCookie(cookie.Value)
+	if err != nil || cookie.Value == "" || !ex {
 		http.Redirect(w, r, "/login-page", http.StatusSeeOther)
 		return
 	}

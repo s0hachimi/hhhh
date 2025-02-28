@@ -68,6 +68,10 @@ func IsLoggedIn(r *http.Request) (bool, string) {
 		return false, ""
 	}
 
+	ex := CheckCookie(cookie.Value)
+	if !ex {
+		return false, ""
+	}
 	// fmt.Println(cookie)
 
 	var userName string

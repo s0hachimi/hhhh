@@ -12,6 +12,12 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ex := CheckCookie(cookie.Value)
+	if !ex {
+		http.Redirect(w, r, "/login-page", http.StatusSeeOther)
+		return
+	}
+
 	if r.Method != "GET" {
 		http.Error(w, "method not allowd", http.StatusMethodNotAllowed)
 		return

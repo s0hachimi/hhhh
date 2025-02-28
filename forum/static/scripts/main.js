@@ -56,7 +56,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
-    });
+    })
+
+    document.querySelectorAll(".main-comment").forEach(but => {
+        let button = but.querySelector("#showComment")
+       let n = 0
+       button.addEventListener("click", function () {
+        if (n === 0) {
+            but.querySelector(".comment-text").style.display = "flex"
+            button.innerHTML = '<i class="fa-solid fa-comment-slash"></i>'
+            n = 1
+        } else {
+            but.querySelector(".comment-text").style.display = "none"
+            button.innerHTML = '<i class="fa-solid fa-comment"></i>'
+            n = 0
+        }
+       })
+
+       let commentText = but.querySelector("#com")
+       let text = but.querySelector("input")
+
+       commentText.addEventListener("click", function () {
+        
+       })
+       
+    })
+
+
+
+
 });
 
 async function updateLikes(postId, action, change) { 
@@ -90,9 +118,4 @@ function openNav() {
 }
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-}
-
-
-function showComment() {
-    document.getElementById("comment-text").style.display = "flex"
 }

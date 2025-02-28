@@ -102,7 +102,7 @@ button.active {
     margin-top: 10px;
 }
 
-button {
+button  {
     background-color: #3f51b5;
     color: white;
     padding: 10px 15px;
@@ -116,6 +116,23 @@ button {
 button:hover {
     background-color: #303f9f;
 }
+
+/* .create {
+    margin: 80px 10px;
+    text-align: center;
+}
+
+#create-Post {
+    background-color: #1f308d;
+    color: white;
+    padding: 60px 60px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+    text-decoration: none;
+} */
 
 .like, .dislike{
     background-color: #9498aa;
@@ -167,9 +184,14 @@ button:hover {
     font-size: large;
 }
 .comment-text {
-    display: none;
+    display:   none;
     justify-content: center;
     margin-top: 10px;
+}
+
+
+.main-comment{
+    display: flex;
 }
 
 .comment-text button {

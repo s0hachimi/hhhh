@@ -39,6 +39,7 @@
             <a href="/liked-posts">
                 <span>My Likes</span>
             </a>
+            <a id="create-Post" href="/create-Post">Create New Post</a>
 
         </div>
         <span style="font-size:20px;cursor:pointer" onclick="openNav()">&#9776; open</span>
@@ -61,8 +62,10 @@
 
 
     </header>
+    <div class="create">
+        <a id="create-Post" href="/create-Post">Create New Post</a>
+    </div>
 
-    <a href="/create-Post">Create New Post</a>
 
     <main class="main-div">
         {{range .}}
@@ -87,32 +90,26 @@
                         <span>{{.Dislikes}}</span>
                     </button>
                 </div>
-                <div class="comment">
-                    <button onclick="showComment()"> <i class="fa-solid fa-comment"></i> </button>
+                <div class="main-comment">
+                    <div class="comment">
+                        <button id="showComment"> <i class="fa-solid fa-comment"></i> </button>
+                    </div>
+                    <div class="comment-text">
+                        <input type="text" placeholder="comment">
+                        <button id="com" type="submit"> Comment </button>
+                    </div>
                 </div>
             </div>
-            <div class="comment-text" id="comment-text">
-                <input type="text" placeholder="comment">
-                <button type="submit"> Comment </button>
+            <div class="comment-content">
+                
             </div>
+
         </div>
         {{end}}
         {{end}}
     </main>
 
     <script src="/static/scripts/main.js"></script>
-    <script>
-        let n = 0
-        function showComment() {
-            if (n === 0) {
-                document.getElementById("comment-text").style.display = "flex"
-                n = 1
-            } else {
-                document.getElementById("comment-text").style.display = "none"
-                n = 0
-            }
-        }
-    </script>
 
 
 </body>

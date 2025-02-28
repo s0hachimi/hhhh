@@ -14,6 +14,12 @@ func LikedPostsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ex := CheckCookie(cookie.Value)
+	if !ex {
+		http.Redirect(w, r, "/login-page", http.StatusSeeOther)
+		return
+	}
+
 	fmt.Println(cookie.Value)
 
 	posts, err := GetLikedPosts(cookie.Value, r)
