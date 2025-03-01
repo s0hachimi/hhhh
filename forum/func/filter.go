@@ -21,7 +21,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 	category := r.FormValue("category")
 
 
-	rows, err := db.Query("SELECT id, username, title, descriptions, time, topic, likes, dislikes FROM posts WHERE topic LIKE ?", "%"+category+"%")
+	rows, err := db.Query("SELECT id, username, title, descriptions, time, topic, likes, dislikes FROM posts ORDER BY time DESC WHERE topic LIKE ?", "%"+category+"%")
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "h", 500)

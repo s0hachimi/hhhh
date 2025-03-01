@@ -50,7 +50,7 @@
             {{range $index, $e := .}}
             {{if eq $index 0}}
             {{if $e.User.IsLoggedIn}}
-            <span>Welcome, {{$e.User.Username}}</span>
+            <span>Welcome, <span id="username">{{$e.User.Username}}</span></span>
             <a href="/logout">Logout</a>
             {{else}}
             <a href="/login-page">Log in</a>
@@ -90,18 +90,22 @@
                         <span>{{.Dislikes}}</span>
                     </button>
                 </div>
-                <div class="main-comment">
+                <div class="main-comment" data-post-id="{{.ID}}">
                     <div class="comment">
                         <button id="showComment"> <i class="fa-solid fa-comment"></i> </button>
                     </div>
                     <div class="comment-text">
-                        <input type="text" placeholder="comment">
+                        <input class="input" type="text" placeholder="comment">
                         <button id="com" type="submit"> Comment </button>
                     </div>
-                </div>
+                </div>                
             </div>
-            <div class="comment-content">
-                
+            <br>
+            <div class="comment-content" data-post-id="{{.ID}}">
+                <div>
+                    <h3 class="name">sohachimi</h3>
+                    <pre class="content">that's good</pre>
+                </div>
             </div>
 
         </div>

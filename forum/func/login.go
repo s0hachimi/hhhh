@@ -68,12 +68,6 @@ func IsLoggedIn(r *http.Request) (bool, string) {
 		return false, ""
 	}
 
-	ex := CheckCookie(cookie.Value)
-	if !ex {
-		return false, ""
-	}
-	// fmt.Println(cookie)
-
 	var userName string
 	err = db.QueryRow("SELECT username FROM users WHERE session_token = ?", cookie.Value).Scan(&userName)
 	if err == sql.ErrNoRows || err != nil {

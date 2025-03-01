@@ -203,6 +203,14 @@ button:hover {
    margin: 10px 10px;
 }
 
+.comment-content div{
+    display: flex;
+    background: #9498aa;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
 /* side bar  */
 
 .sidenav {

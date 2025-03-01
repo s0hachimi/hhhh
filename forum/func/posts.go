@@ -24,7 +24,7 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	topic := ""
 
 	for _, v := range s {
-		topic += v + ","
+		topic += v + ", "
 	}
 	fmt.Println(cookie.Value)
 

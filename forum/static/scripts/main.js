@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+
     document.querySelectorAll(".post").forEach(post => {
         let likeBtn = post.querySelector(".like");
         let dislikeBtn = post.querySelector(".dislike");
@@ -60,26 +61,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll(".main-comment").forEach(but => {
         let button = but.querySelector("#showComment")
-       let n = 0
-       button.addEventListener("click", function () {
-        if (n === 0) {
-            but.querySelector(".comment-text").style.display = "flex"
-            button.innerHTML = '<i class="fa-solid fa-comment-slash"></i>'
-            n = 1
-        } else {
-            but.querySelector(".comment-text").style.display = "none"
-            button.innerHTML = '<i class="fa-solid fa-comment"></i>'
-            n = 0
-        }
-       })
+        let n = 0
+        button.addEventListener("click", function () {
+            if (n === 0) {
+                but.querySelector(".comment-text").style.display = "flex"
+                button.innerHTML = '<i class="fa-solid fa-comment-slash"></i>'
+                n = 1
+            } else {
+                but.querySelector(".comment-text").style.display = "none"
+                button.innerHTML = '<i class="fa-solid fa-comment"></i>'
+                n = 0
+            }
+        })
 
-       let commentText = but.querySelector("#com")
-       let text = but.querySelector("input")
+        let commentText = but.querySelector("#com")
+        let text = but.querySelector("input")
+        let username = document.getElementById("username")
+        let u = 0 
+            if (username === null) {
+               u = 1
+            } else {
+                username = username.textContent
+            }
+        let postID = but.getAttribute("data-post-id")
 
-       commentText.addEventListener("click", function () {
-        
-       })
-       
+
+        commentText.addEventListener("click", function () {
+            document.querySelectorAll(".comment-content").forEach(el => {
+                
+            let nameOfUser = document.createElement("h3")
+            let content = document.createElement("pre")
+            let div = document.createElement("div")
+                if (u === 1) {
+                    location.href = "/login-page"
+                    return
+                }
+            nameOfUser.textContent = username
+            content.textContent = text.value
+
+            div.append(nameOfUser, content)
+
+           
+                let elID = el.getAttribute("data-post-id")
+                if (elID === postID) {
+                    el.append(div)
+                }
+            })
+
+        })
+
     })
 
 
@@ -87,7 +117,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-async function updateLikes(postId, action, change) { 
+// async function addComment(username, content) {
+//     try {
+//         let response = await fetch("comment", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify({})
+//         })
+//     }
+
+// }
+
+async function updateLikes(postId, action, change) {
     try {
         let response = await fetch("/like", {
             method: "POST",
@@ -103,7 +146,7 @@ async function updateLikes(postId, action, change) {
             window.location.href = "/login-page"
             return false
         }
-        
+
         return true
 
     } catch (error) {
