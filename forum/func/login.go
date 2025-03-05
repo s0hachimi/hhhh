@@ -2,7 +2,8 @@ package forum
 
 import (
 	"database/sql"
-	"fmt"
+	"encoding/json"
+	"io"
 	"net/http"
 	"time"
 
@@ -10,42 +11,52 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type gg struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	if r.URL.Path != "/login" {
-		http.Error(w, "page not found", 404)
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Bad Request !", http.StatusBadRequest)
 		return
 	}
 
-	username := r.FormValue("username")
-	password := r.FormValue("password")
+	var req gg
+	if err := json.Unmarshal(body, &req); err != nil {
+		http.Error(w, "Bad Request !", http.StatusBadRequest)
+		return
+	}
 
 	var userID int
 	var hashedPassword string
-	err := db.QueryRow("SELECT id, password FROM users WHERE username = ?", username).Scan(&userID, &hashedPassword)
+	err = db.QueryRow("SELECT id, password FROM users WHERE username = ?", req.Username).Scan(&userID, &hashedPassword)
 	if err == sql.ErrNoRows {
-		http.Error(w, "username is incorrect !", 404)
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"error": "Username is incorrect!"})
 		return
 	} else if err != nil {
-		http.Error(w, "Error in Database !", http.StatusInternalServerError)
+		http.Error(w, "Error in Database!", http.StatusInternalServerError)
 		return
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password)); err != nil {
-		http.Error(w, "password is incorrect !", 404)
+	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(req.Password)); err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"error": "Password is incorrect!"})
 		return
 	}
 
 	sessionToken := uuid.New().String()
-	expiration := time.Now().Add(24 * time.Hour)
+	expiration := time.Now().Add(1 * time.Hour)
 
 	_, err = db.Exec("UPDATE users SET session_token = ? WHERE id = ?", sessionToken, userID)
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "Error saving session!", http.StatusInternalServerError)
 		return
 	}
@@ -58,14 +69,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 	})
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	json.NewEncoder(w).Encode(map[string]string{"success": "Login successful!"})
 }
 
-
 func IsLoggedIn(r *http.Request) (bool, string) {
-	
 	cookie, err := r.Cookie("session_token")
-	if err != nil {
+	if err != nil || cookie.Value == "" {
 		return false, ""
 	}
 
@@ -77,4 +86,3 @@ func IsLoggedIn(r *http.Request) (bool, string) {
 
 	return true, userName
 }
-
