@@ -1,7 +1,7 @@
 -- Create Users table
 CREATE TABLE IF NOT EXISTS users  (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT,
+    username TEXT UNIQUE,
     email TEXT UNIQUE,
     password TEXT,
     session_token TEXT
@@ -36,6 +36,18 @@ CREATE TABLE IF NOT EXISTS comments (
     user_id INTEGER,
     comment_text TEXT NOT NULL,
     time TEXT,
+    likes INTEGER DEFAULT 0,
+    dislikes INTEGER DEFAULT 0,
     FOREIGN KEY (post_id) REFERENCES posts(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Create Comments likes table
+CREATE TABLE IF NOT EXISTS comment_likes (
+    user_id INTEGER,
+    comment_id INTEGER,
+    like_type INTEGER,
+    FOREIGN KEY (comment_id) REFERENCES comments(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    UNIQUE (user_id, comment_id)
 );

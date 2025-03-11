@@ -13,11 +13,14 @@ document.addEventListener("DOMContentLoaded", function () {
             let dislikes = Number(dislikeSpan.textContent);
 
             if (likeBtn.classList.contains("active")) {
-                let success = await updateLikes(postId, "like", -1);
-                if (success) {
-                    likeBtn.classList.remove("active");
-                    likeSpan.textContent = likes - 1;
+                if (likes !== 0) {
+                    let success = await updateLikes(postId, "like", -1);
+                    if (success) {
+                        likeBtn.classList.remove("active");
+                        likeSpan.textContent = likes - 1;
+                    }
                 }
+
             } else {
                 let success = await updateLikes(postId, "like", 1);
                 if (success) {
@@ -25,9 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     likeSpan.textContent = likes + 1;
 
                     if (dislikeBtn.classList.contains("active")) {
-                        await updateLikes(postId, "dislike", -1);
-                        dislikeBtn.classList.remove("active");
-                        dislikeSpan.textContent = dislikes - 1;
+                        if (dislikes !== 0) {
+                            await updateLikes(postId, "dislike", -1);
+                            dislikeBtn.classList.remove("active");
+                            dislikeSpan.textContent = dislikes - 1;
+                        }
+
                     }
                 }
             }
@@ -38,11 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
             let dislikes = Number(dislikeSpan.textContent);
 
             if (dislikeBtn.classList.contains("active")) {
-                let success = await updateLikes(postId, "dislike", -1);
-                if (success) {
-                    dislikeBtn.classList.remove("active");
-                    dislikeSpan.textContent = dislikes - 1;
+                if (dislikes !== 0) {
+                    let success = await updateLikes(postId, "dislike", -1);
+                    if (success) {
+                        dislikeBtn.classList.remove("active");
+                        dislikeSpan.textContent = dislikes - 1;
+                    }
                 }
+
             } else {
                 let success = await updateLikes(postId, "dislike", 1);
                 if (success) {
@@ -50,9 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     dislikeSpan.textContent = dislikes + 1;
 
                     if (likeBtn.classList.contains("active")) {
-                        await updateLikes(postId, "like", -1);
-                        likeBtn.classList.remove("active");
-                        likeSpan.textContent = likes - 1;
+                        if (likes !== 0) {
+                            await updateLikes(postId, "like", -1);
+                            likeBtn.classList.remove("active");
+                            likeSpan.textContent = likes - 1;
+                        }
+
                     }
                 }
             }
@@ -90,13 +102,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if (text.value === "") {
                 return
             }
-            document.querySelectorAll(".comment-content").forEach(async function (el) {
+            document.querySelectorAll(".comment-content").forEach( function (el) {
 
-
+                let elID = el.getAttribute("data-post-id")
 
                 let nameOfUser = document.createElement("h3")
                 let content = document.createElement("pre")
                 let time = document.createElement("span")
+                let d = document.createElement("div")
                 let div = document.createElement("div")
                 if (u === 1) {
                     location.href = "/login-page"
@@ -111,14 +124,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 content.textContent = text.value
                 time.textContent = dateNow
 
+                d.innerHTML = `
+                <div class="box comment-like" comment-id="${elID}">
+                    <button class="like">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        <span>0</span>
+                    </button>
+
+                    <button class="dislike">
+                        <i class="fa-solid fa-thumbs-down"></i>
+                        <span>0</span>
+                    </button>
+                `
+                d.className = "reactions"
                 div.className = "div"
-                div.append(nameOfUser, content, time)
+               
+                div.setAttribute("id", elID)
+                
+                
+                div.append(nameOfUser, content, time, d)
 
-
-                let elID = el.getAttribute("data-post-id")
                 if (elID === postID) {
                     text.value = ""
-                    await addComment(postID, nameOfUser.textContent, content.textContent, dateNow)
+                    addComment(postID, nameOfUser.textContent, content.textContent, dateNow)
                     el.querySelector(".hihi").prepend(div)
                 }
 
@@ -141,6 +169,79 @@ document.addEventListener("DOMContentLoaded", function () {
                 c = 0
             }
         })
+    })
+
+
+    
+    Array.from(document.getElementsByClassName("comment-like")).forEach(el => {
+
+        let likeBtn = el.querySelector(".like")
+        let dislikeBtn = el.querySelector(".dislike")
+        let likeSpan = likeBtn.querySelector("span")
+        let dislikeSpan = dislikeBtn.querySelector("span")
+        let commentId = el.getAttribute("comment-id")
+
+        likeBtn.addEventListener("click", async function () {
+            let likes = Number(likeSpan.textContent);
+            let dislikes = Number(dislikeSpan.textContent);
+
+            if (likeBtn.classList.contains("active")) {
+                if (likes !== 0) {
+                    let success = await updateCommentLikes(commentId, "like", -1);
+                    if (success) {
+                        likeBtn.classList.remove("active");
+                        likeSpan.textContent = likes - 1;
+                    }
+                }
+
+            } else {
+                let success = await updateCommentLikes(commentId, "like", 1);
+                if (success) {
+                    likeBtn.classList.add("active");
+                    likeSpan.textContent = likes + 1;
+
+                    if (dislikeBtn.classList.contains("active")) {
+                        if (dislikes !== 0) {
+                            await updateCommentLikes(commentId, "dislike", -1);
+                            dislikeBtn.classList.remove("active");
+                            dislikeSpan.textContent = dislikes - 1;
+                        }
+
+                    }
+                }
+            }
+        });
+
+        dislikeBtn.addEventListener("click", async function () {
+            let likes = Number(likeSpan.textContent);
+            let dislikes = Number(dislikeSpan.textContent);
+
+            if (dislikeBtn.classList.contains("active")) {
+                if (dislikes !== 0) {
+                    let success = await updateCommentLikes(commentId, "dislike", -1);
+                    if (success) {
+                        dislikeBtn.classList.remove("active");
+                        dislikeSpan.textContent = dislikes - 1;
+                    }
+                }
+
+            } else {
+                let success = await updateCommentLikes(commentId, "dislike", 1);
+                if (success) {
+                    dislikeBtn.classList.add("active");
+                    dislikeSpan.textContent = dislikes + 1;
+
+                    if (likeBtn.classList.contains("active")) {
+                        if (likes !== 0) {
+                            await updateCommentLikes(commentId, "like", -1);
+                            likeBtn.classList.remove("active");
+                            likeSpan.textContent = likes - 1;
+                        }
+
+                    }
+                }
+            }
+        });
     })
 
 
@@ -192,6 +293,30 @@ async function updateLikes(postId, action, change) {
     }
 }
 
+async function updateCommentLikes(commentId, action, change) {
+    try {
+        let response = await fetch("/comment-like", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ comment_id: Number(commentId), action: action, change: change })
+        });
+
+        let data = await response.json();
+
+        if (!data.success) {
+            window.location.href = "/login-page"
+            return false
+        }
+
+        return true
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+        return false
+    }
+}
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -199,18 +324,3 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
-
-// let c = 0
-
-// function showComments() {
-//     if (c === 0) {
-//         document.querySelector(".comment-content").style.display = "block"
-//         document.querySelector(".hide").textContent = "Hide comments"
-//         c = 1
-//     } else {
-//         document.querySelector(".comment-content").style.display = "none"
-//         document.querySelector(".hide").textContent = "Show comments"
-//         c = 0
-//     }
-
-// }

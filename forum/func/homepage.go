@@ -65,8 +65,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	newPost.User.Username = username
 	newPost.User.IsLoggedIn = is
 
-	arrPost = append(arrPost, newPost)
-
 	for rows.Next() {
 		var username, title, descriptions, t, topic string
 		var id, like, dislike int
@@ -89,12 +87,13 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 			newPost.Reaction.Dislike = false
 		}
 
-		comment, _ := GetComment(id)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	http.Error(w, "database !", 500)
-		// 	return
-		// }
+		comment, err := GetComment(id)
+		// fmt.Println(id, comment)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "database !", 500)
+			return
+		}
 
 		newPost.ID = id
 		newPost.Username = username
@@ -109,6 +108,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		arrPost = append(arrPost, newPost)
 		newPost = Post{}
 	}
+	arrPost = append(arrPost, newPost)
 
 	tmp, err := template.ParseFiles("template/index.html")
 	if err != nil {

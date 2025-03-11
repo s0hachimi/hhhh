@@ -12,7 +12,7 @@
 <body>
 
     <div class="page-login">
-        <form id="signupForm" action="/singup" method="post">
+        <form id="signupForm" method="post">
             <div class="cont">
                 <h1>Register</h1>
                 <div class="input-login">
@@ -43,51 +43,7 @@
         </form>
     </div>
 
-    <script>
-        let btn = document.querySelector(".btn")
-        let pass1 = document.querySelector("#pass1")
-        let pass2 = document.querySelector("#pass2")
-        let errorMsg = document.querySelector("#errorMsg")
-        let email = document.querySelector("#email")
-
-        function isStrongPassword(password) {
-            const hasLower = /[a-z]/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasNumber = /\d/.test(password);
-            const isLong = password.length >= 8;
-
-            return hasLower && hasUpper && hasNumber && isLong;
-        }
-        function isGmail(email) {
-            const start = /^[a-zA-Z]/.test(email)
-            const end = email.endsWith("@gmail.com")
-            return start && end
-        }
-        btn.addEventListener("click", (e) => {
-
-            if (!isGmail(email.value)) {
-                errorMsg.textContent = "Email must be a valid Gmail address.";
-                errorMsg.style.display = "block";
-                e.preventDefault()
-                return
-            }
-
-
-            if (!isStrongPassword(pass1.value)) {
-                errorMsg.textContent = "Password must be at least 8 characters long and include at least one number, one lowercase letter, and one uppercase letter.";
-                errorMsg.style.display = "block";
-                e.preventDefault()
-                return
-            }
-
-            if (pass1.value !== pass2.value) {
-                errorMsg.textContent = 'Password not match';
-                errorMsg.style.display = "block";
-                e.preventDefault()
-                return
-            }
-        })
-    </script>
+    <script src="/static/scripts/signup.js"></script>
 
 </body>
 

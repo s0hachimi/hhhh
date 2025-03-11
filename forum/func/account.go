@@ -7,11 +7,11 @@ import (
 
 func SingupPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "method not allowd", http.StatusMethodNotAllowed)
+		http.Error(w, "method not allowd ", http.StatusMethodNotAllowed)
 		return
 	}
 
-	if r.URL.Path != "/singup-page" {
+	if r.URL.Path != "/signup-page" {
 		http.Error(w, "page not found", 404)
 		return
 	}

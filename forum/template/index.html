@@ -106,7 +106,21 @@
                     <div class="div" id="{{.Id}}">
                         <h3 class="name">{{.Username}}</h3>
                         <pre class="content">{{.Text}}</pre>
-                        <span>{{.Time}}</span>
+                        <span>{{.Time}}</span> <br>
+                        <div class="reactions">
+                            <div class="box comment-like" comment-id="{{.Id}}">
+                                <button class="like">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <span>0</span>
+                                </button>
+            
+                                <button class="dislike">
+                                    <i class="fa-solid fa-thumbs-down"></i>
+                                    <span>0</span>
+                                </button>
+                            </div>
+                        </div>
+                       
                     </div>
                     {{end}}
                 </div>
