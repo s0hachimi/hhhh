@@ -102,7 +102,6 @@ func isGmail(email string) bool {
 	// match, _ := regexp.MatchString("^[a-zA-Z][a-zA-Z0-9._%+-]*@gmail\\.com$", email)
 	gmail, _ := regexp.MatchString("^[a-zA-Z]", email)
 	end, _ := regexp.MatchString("@gmail.com$", email)
-	fmt.Println(gmail && end)
 	return gmail && end
 }
 

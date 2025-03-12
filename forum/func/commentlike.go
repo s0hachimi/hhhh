@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -48,7 +49,7 @@ func CommentLikeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println(req)
-	
+
 	var column string
 	switch req.Action {
 	case "like":
@@ -96,8 +97,6 @@ func LikedComment(cookieValue string, commentID int, likeType string) error {
 		n = -1
 	}
 
-	fmt.Println(n, likeType)
-
 	_, err = db.Exec(`
         INSERT INTO comment_likes (user_id, comment_id, like_type) 
         VALUES (?, ?, ?) 
@@ -110,4 +109,28 @@ func LikedComment(cookieValue string, commentID int, likeType string) error {
 	}
 
 	return nil
+}
+
+func GetUserReactionComments(r *http.Request, commentID int) int {
+	cookie, err := r.Cookie("session_token")
+	if err != nil || cookie.Value == "" {
+		return 0
+	}
+
+	var userID int
+	err = db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookie.Value).Scan(&userID)
+	if err == sql.ErrNoRows || err != nil {
+		return 0
+	}
+
+	var likeType int
+	err = db.QueryRow("SELECT like_type FROM comment_likes WHERE user_id = ? AND comment_id = ?", userID, commentID).Scan(&likeType)
+	if err == sql.ErrNoRows {
+		return 0
+	}
+	if err != nil {
+		return 0
+	}
+
+	return likeType
 }

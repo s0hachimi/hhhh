@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <title>Forum</title>
     <link rel="stylesheet" href="/static/css/style.css">
+
 </head>
 
 <body>
@@ -16,7 +17,7 @@
 
         <div id="mySidenav" class="sidenav">
 
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a class="closebtn" onclick="closeNav()">&times;</a>
             <a href="/">
                 <span>Home</span>
             </a>
@@ -58,10 +59,12 @@
         </div>
 
 
+
     </header>
     <div class="create">
         <a id="create-Post" href="/create-Post">Create New Post</a>
     </div>
+
 
     <main class="main-div">
         {{range .}}
@@ -94,22 +97,39 @@
                         <input class="input" type="text" placeholder="comment">
                         <button id="com" type="submit"> Comment </button>
                     </div>
-                </div>
+                </div>                
             </div>
             <br>
             <div class="comment-content" data-post-id="{{.ID}}">
-                <div>
-                    <h3 class="name">sohachimi</h3>
-                    <pre class="content">that's good</pre>
-                    <span>2025-03-04 17:09:08</span>
+                <div class="hihi">
+                    {{range .Comment}}
+                    <div class="div" id="{{.Id}}">
+                        <h3 class="name">{{.Username}}</h3>
+                        <pre class="content">{{.Text}}</pre>
+                        <span>{{.Time}}</span> <br>
+                        <div class="reactions">
+                            <div class="box comment-like" data-comment-id="{{.Id}}">
+                                <button class="like {{if .Reaction.Like}} active {{end}}">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <span>{{.Likes}}</span>
+                                </button>
+            
+                                <button class="dislike {{if .Reaction.Dislike}} active {{end}}">
+                                    <i class="fa-solid fa-thumbs-down"></i>
+                                    <span>{{.Dislikes}}</span>
+                                </button>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    {{end}}
                 </div>
+                <button class="hide">Show comments</button>
             </div>
-
         </div>
         {{end}}
         {{end}}
     </main>
-
 
     <script src="/static/scripts/main.js"></script>
 

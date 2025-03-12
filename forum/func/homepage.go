@@ -13,6 +13,9 @@ type comment struct {
 	Username string
 	Text     string
 	Time     string
+	Likes        int
+	Dislikes     int
+	Reaction     reaction
 }
 
 type users struct {
@@ -87,7 +90,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 			newPost.Reaction.Dislike = false
 		}
 
-		comment, err := GetComment(id)
+		comment, err := GetComment(r, id)
 		// fmt.Println(id, comment)
 		if err != nil {
 			fmt.Println(err)

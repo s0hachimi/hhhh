@@ -55,21 +55,24 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("INSERT INTO comments (user_id, post_id, comment_text, time) VALUES (?, ?, ?, ?)", userID, req.PostID, req.Content, req.Time)
+	res, err := db.Exec("INSERT INTO comments (user_id, post_id, comment_text, time) VALUES (?, ?, ?, ?)", userID, req.PostID, req.Content, req.Time)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Bad Request ! !", http.StatusBadRequest)
 		return
 	}
 
+	n, _ := res.LastInsertId()
+
 	sendJSONResponse(w, http.StatusUnauthorized, map[string]interface{}{
 		"success": true,
+		"id": n,
 	})
 }
 
-func GetComment(postID int) ([]comment, error) {
+func GetComment(r *http.Request, postID int) ([]comment, error) {
 
-	rows, err := db.Query("SELECT id, post_id, user_id, comment_text, time FROM comments WHERE post_id = ? ORDER BY time DESC;", postID)
+	rows, err := db.Query("SELECT id, post_id, user_id, comment_text, time, likes, dislikes FROM comments WHERE post_id = ? ORDER BY time DESC;", postID)
 	if err != nil {
 		return nil, err
 	}
@@ -79,9 +82,20 @@ func GetComment(postID int) ([]comment, error) {
 
 	for rows.Next() {
 		var c comment
-		err := rows.Scan(&c.Id, &c.PostId, &c.UserId, &c.Text, &c.Time)
+		err := rows.Scan(&c.Id, &c.PostId, &c.UserId, &c.Text, &c.Time, &c.Likes, &c.Dislikes)
 		if err != nil {
 			return nil, err
+		}
+
+		R := GetUserReactionComments(r, c.Id)
+
+		if R == 1 {
+			c.Reaction.Like = true
+		} else if R == -1 {
+			c.Reaction.Dislike = true
+		} else {
+			c.Reaction.Like = false
+			c.Reaction.Dislike = false
 		}
 
 		var username string

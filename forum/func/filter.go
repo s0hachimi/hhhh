@@ -35,7 +35,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 
 	rows, err := db.Query("SELECT id, username, title, descriptions, time, topic, likes, dislikes FROM posts WHERE topic LIKE ? ORDER BY time DESC", "%"+category+"%")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("fff",err)
 		http.Error(w, "h", 500)
 		return
 	}
@@ -71,6 +71,14 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 			newFilter.Reaction.Dislike = false
 		}
 
+		comment, err := GetComment(r, id)
+		// fmt.Println(id, comment)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "database !", 500)
+			return
+		}
+
 		newFilter.ID = id
 		newFilter.Username = username
 		newFilter.Title = title
@@ -79,6 +87,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		newFilter.Topic = topic
 		newFilter.Likes = like
 		newFilter.Dislikes = dislike
+		newFilter.Comment = comment
 
 		arrFilter = append(arrFilter, newFilter)
 		newFilter = Post{}

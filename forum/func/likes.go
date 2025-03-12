@@ -113,8 +113,6 @@ func LikedPost(cookieValue string, postID int, likeType string) error {
 		n = -1
 	}
 
-	fmt.Println(n, likeType)
-
 	_, err = db.Exec(`
         INSERT INTO post_likes (user_id, post_id, like_type) 
         VALUES (?, ?, ?) 

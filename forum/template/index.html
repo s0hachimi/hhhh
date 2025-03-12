@@ -108,15 +108,15 @@
                         <pre class="content">{{.Text}}</pre>
                         <span>{{.Time}}</span> <br>
                         <div class="reactions">
-                            <div class="box comment-like" comment-id="{{.Id}}">
-                                <button class="like">
+                            <div class="box comment-like" data-comment-id="{{.Id}}">
+                                <button class="like {{if .Reaction.Like}} active {{end}}">
                                     <i class="fa-solid fa-thumbs-up"></i>
-                                    <span>0</span>
+                                    <span>{{.Likes}}</span>
                                 </button>
             
-                                <button class="dislike">
+                                <button class="dislike {{if .Reaction.Dislike}} active {{end}}">
                                     <i class="fa-solid fa-thumbs-down"></i>
-                                    <span>0</span>
+                                    <span>{{.Dislikes}}</span>
                                 </button>
                             </div>
                         </div>

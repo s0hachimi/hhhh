@@ -42,7 +42,6 @@ func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 
 	err := db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookieValue).Scan(&userID)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
@@ -82,6 +81,13 @@ func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 			p.Reaction.Like = false
 			p.Reaction.Dislike = false
 		}
+
+		comment, err := GetComment(r, p.ID)
+		// fmt.Println(id, comment)
+		if err != nil {
+			return nil, err
+		}
+		p.Comment = comment
 
 		posts = append(posts, p)
 	}
