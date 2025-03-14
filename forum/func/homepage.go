@@ -49,7 +49,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.URL.Path != "/" {
-		http.Error(w, "page not found", 404)
+		ErrorHandler(w, "page not found !!", 404)
 		return
 	}
 

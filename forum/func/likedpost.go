@@ -81,7 +81,6 @@ func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 		}
 
 		comment, err := GetComment(r, p.ID)
-		// fmt.Println(id, comment)
 		if err != nil {
 			return nil, err
 		}
