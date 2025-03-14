@@ -80,6 +80,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		R := GetUserReaction(r, id)
+		fmt.Println(R)
 
 		if R == 1 {
 			newPost.Reaction.Like = true

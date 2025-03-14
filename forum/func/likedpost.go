@@ -1,7 +1,6 @@
 package forum
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -20,14 +19,11 @@ func LikedPostsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(cookie.Value)
-
 	posts, err := GetLikedPosts(cookie.Value, r)
 	if err != nil {
 		http.Error(w, "Error fetching liked posts", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(len(posts))
 
 	tmpl, err := template.ParseFiles("template/liked_posts.html")
 	if err != nil {
@@ -49,7 +45,7 @@ func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 		SELECT posts.id, posts.username, posts.title, posts.descriptions, posts.time, posts.topic, posts.likes, posts.dislikes 
 		FROM posts 
 		JOIN post_likes ON posts.id = post_likes.post_id 
-		WHERE post_likes.user_id = ?
+		WHERE post_likes.user_id = ? AND post_likes.like_type != 0 
 		ORDER BY posts.time DESC
 	`, userID)
 
@@ -59,17 +55,19 @@ func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 	defer rows.Close()
 
 	var posts []Post
+	var p Post
+	is, username := IsLoggedIn(r)
+	p.User.Username = username
+	p.User.IsLoggedIn = is
+
+	posts = append(posts, p)
 
 	for rows.Next() {
-		var p Post
+
 		err := rows.Scan(&p.ID, &p.Username, &p.Title, &p.Descriptions, &p.Time, &p.Topic, &p.Likes, &p.Dislikes)
 		if err != nil {
 			return nil, err
 		}
-
-		is, username := IsLoggedIn(r)
-		p.User.Username = username
-		p.User.IsLoggedIn = is
 
 		R := GetUserReaction(r, p.ID)
 
@@ -90,6 +88,7 @@ func GetLikedPosts(cookieValue string, r *http.Request) ([]Post, error) {
 		p.Comment = comment
 
 		posts = append(posts, p)
+		p = Post{}
 	}
 
 	return posts, nil

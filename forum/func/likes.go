@@ -67,14 +67,12 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Change != -1 {
-		err = LikedPost(cookie.Value, req.PostID, req.Action)
+		err = LikedPost(cookie.Value, req.PostID, req.Action, req.Change)
 		if err != nil {
 			fmt.Println("err", err)
 			http.Error(w, "Internal Server Error !!", http.StatusInternalServerError)
 			return
 		}
-	}
 	
 	sendJSONResponse(w, http.StatusOK, map[string]interface{}{
 		"success": true,
@@ -98,7 +96,7 @@ func sendJSONResponse(w http.ResponseWriter, statusCode int, response map[string
 	json.NewEncoder(w).Encode(response)
 }
 
-func LikedPost(cookieValue string, postID int, likeType string) error {
+func LikedPost(cookieValue string, postID int, likeType string, change int) error {
 	var userID int
 	err := db.QueryRow("SELECT id FROM users WHERE session_token = ?", cookieValue).Scan(&userID)
 	if err != nil {
@@ -107,9 +105,9 @@ func LikedPost(cookieValue string, postID int, likeType string) error {
 	}
 
 	var n int
-	if likeType == "like" {
+	if likeType == "like" && change != -1 {
 		n = 1
-	} else {
+	} else if likeType == "dislike" && change != -1 {
 		n = -1
 	}
 
@@ -142,6 +140,7 @@ func GetUserReaction(r *http.Request, postID int) int {
 
 	
 	var likeType int
+
 	err = db.QueryRow("SELECT like_type FROM post_likes WHERE user_id = ? AND post_id = ?", userID, postID).Scan(&likeType)
 	if err == sql.ErrNoRows {
 		return 0 
